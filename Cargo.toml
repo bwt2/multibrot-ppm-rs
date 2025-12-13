@@ -2,7 +2,7 @@
 name = "mandelbrot-ppm-rs"
 version = "0.1.0"
 edition = "2024"
-description = "Generates output .ppm file"
+description = "Draws Mandelbrot set on a .ppm file"
 
 [dependencies]
 clap = { version = "4.5.53", features = ["derive"] }
