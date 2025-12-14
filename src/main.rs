@@ -14,10 +14,6 @@ struct Config {
     #[arg(long, value_parser = clap::value_parser!(u16).range(1..), default_value_t = 9*600)]
     height: u16,
 
-    /// Max iteration to determine if evolution of complex number c under z = z^2 + c is bounded
-    #[arg(long, value_parser = clap::value_parser!(u32).range(1..), default_value_t = 100)]
-    max_iter: u32,
-
     /// Output file path
     #[arg(long, short = 'o', default_value_t = String::from("output.ppm"))]
     output_path: String,
@@ -38,7 +34,9 @@ fn main() {
 
     let ppm_buf = PPMImageBuffer::new(config.width, config.height, raster)
         .expect("Error creating ppm buffer");
-    ppm_buf.write_to_ppm().expect("Error creating ppm file");
+    ppm_buf
+        .write_to_ppm(&config.output_path)
+        .expect("Error creating ppm file");
 
     println!(
         "Wrote {}x{} image to \"{}\" in {:.2?}",

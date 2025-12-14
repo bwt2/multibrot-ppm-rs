@@ -28,8 +28,8 @@ impl PPMImageBuffer {
         })
     }
 
-    pub fn write_to_ppm(&self) -> Result<(), std::io::Error> {
-        let mut f = File::create("output.ppm")?;
+    pub fn write_to_ppm(&self, filepath: &str) -> Result<(), std::io::Error> {
+        let mut f = File::create(filepath)?;
         write!(f, "P6\n{} {}\n255\n", self.width, self.height)?;
         f.write_all(&self.raster)?;
         Ok(())
