@@ -1,5 +1,5 @@
 [package]
-name = "mandelbrot-ppm-rs"
+name = "ppm-rs"
 version = "0.1.0"
 edition = "2024"
 description = "Draws Mandelbrot set on a .ppm file"
