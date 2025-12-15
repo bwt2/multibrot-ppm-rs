@@ -1,8 +1,10 @@
 [package]
-name = "ppm-rs"
+name = "multibrot-ppm-rs"
 version = "0.1.0"
 edition = "2024"
-description = "Draws into a .ppm file"
+description = "Draws a multibrot image into a .ppm file."
 
 [dependencies]
 clap = { version = "4.5.53", features = ["derive"] }
+indicatif = "0.18.3"
+num = "0.4.3"

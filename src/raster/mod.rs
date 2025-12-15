@@ -5,3 +5,7 @@ pub trait RasterGenerator: Display {
 }
 
 pub mod mandelbrot;
+pub mod multibrot;
+pub mod viewwindow;
+
+pub use viewwindow::ViewWindow;

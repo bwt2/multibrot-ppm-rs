@@ -1,5 +1,5 @@
-## PPM File Generator
-Draw into a PPM file.
+## Multibrot PPM File Generator
+Draws a multibrot image into a .ppm file.
 
 ```bash
 cargo run
@@ -10,36 +10,43 @@ cargo build --release
 ```
 
 ```
-Draws into a .ppm file
-
-Usage: ppm-rs [OPTIONS]
+Usage: multibrot-ppm-rs [OPTIONS]
 
 Options:
-      --width <WIDTH>              Output image width [default: 9600]
-      --height <HEIGHT>            Output image height [default: 5400]
+      --width <WIDTH>              Output image width [default: 1000]
+      --height <HEIGHT>            Output image height [default: 1000]
   -o, --output-path <OUTPUT_PATH>  Output file path [default: output.ppm]
+  -z, --zoomed                     Render a zoomed-in view centered on the origin
+  -n, --n <N>                      Multibrot n, where z -> z^n + c is used for drawing the set [default: 2]
   -h, --help                       Print help
   -V, --version                    Print version
 ```
 
-See the PPM specification here: https://netpbm.sourceforge.net/doc/ppm.html
+## Library Usage
+You can also use the Multibrot raster generator directly from Rust.
 
-## Usage
-To use the mandelbrot set raster generator, build the raster and use the `PPMImageBuffer` to write to a .ppm file.
+To use the multibrot set raster generator, build the raster and use the `PPMImageBuffer` to write to a .ppm file.
 
 ```rust
-use ppm_rs::ppm::PPMImageBuffer;
-use ppm_rs::raster::{mandelbrot::Mandelbrot, RasterGenerator};
+use multibrot_ppm_rs::ppm::PPMImageBuffer;
+use multibrot_ppm_rs::raster::{multibrot::Multibrot, RasterGenerator, ViewWindow};
 
 fn main() {
-  let raster_builder = Mandelbrot::new(100).unwrap();
-  let raster = raster_builder.generate(16*600, 9*600);
+  let viewwindow = ViewWindow::full();
 
-  let ppm_buf = PPMImageBuffer::new(16*600, 9*600, raster)
-          .expect("Error creating ppm buffer");
-  ppm_buf.write_to_ppm("output.ppm").expect("Error creating ppm file");
+  let raster = Multibrot::new_with_view(3.0, 100, viewwindow)
+      .unwrap()
+      .generate(1000, 1000);
+
+  PPMImageBuffer::new(1000, 1000, raster)
+      .expect("Error creating ppm buffer")
+      .write_to_ppm("output.ppm")
+      .expect("Error creating ppm file");
 }
 ```
 
-![Mandelbrot set PPM output](docs/output.webp)
+![Multibrot set PPM output](docs/output.webp)
 
+## References
+- PPM specification: https://netpbm.sourceforge.net/doc/ppm.html
+- Escape time algorithm for drawing multibrot set: https://en.wikipedia.org/wiki/Multibrot_set#Rendering_images

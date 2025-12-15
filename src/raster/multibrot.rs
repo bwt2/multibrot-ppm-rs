@@ -6,36 +6,42 @@ use num::complex::Complex;
 use std::error::Error;
 use std::fmt;
 
-/// Mandelbrot set raster builder
-pub struct Mandelbrot {
+/// Multibrot set raster builder, defined as the mandelbrot set for the transformation z => z^n + c
+pub struct Multibrot {
     pub max_iter: u32,
+    pub n: f64,
     pub view_window: ViewWindow,
 }
 
-impl Mandelbrot {
-    pub fn new(max_iter: u32) -> Result<Self, Box<dyn Error>> {
-        Self::new_with_view(max_iter, ViewWindow::new(-2.0, 1.0, -1.0, 1.0))
+impl Multibrot {
+    pub fn new(n: f64, max_iter: u32) -> Result<Self, Box<dyn Error>> {
+        Self::new_with_view(n, max_iter, ViewWindow::full())
     }
 
-    pub fn new_with_view(max_iter: u32, view_window: ViewWindow) -> Result<Self, Box<dyn Error>> {
+    pub fn new_with_view(
+        n: f64,
+        max_iter: u32,
+        view_window: ViewWindow,
+    ) -> Result<Self, Box<dyn Error>> {
         if max_iter == 0 {
             return Err("max_iter must be > 0".into());
         }
 
         Ok(Self {
             max_iter,
+            n,
             view_window,
         })
     }
 }
 
-impl fmt::Display for Mandelbrot {
+impl fmt::Display for Multibrot {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Mandelbrot [max_iter={}]", self.max_iter)
+        write!(f, "Multibrot [n={},max_iter={}]", self.n, self.max_iter)
     }
 }
 
-impl RasterGenerator for Mandelbrot {
+impl RasterGenerator for Multibrot {
     fn generate(&self, width: u16, height: u16) -> Vec<u8> {
         if width == 0 || height == 0 {
             return Vec::new();
@@ -58,7 +64,7 @@ impl RasterGenerator for Mandelbrot {
             .unwrap()
             .progress_chars("=>-"),
         );
-        progress_bar.set_message("Building Mandelbrot raster");
+        progress_bar.set_message("Building Multibrot raster");
 
         let mut i = 0;
         for py in 0..h {
@@ -67,18 +73,16 @@ impl RasterGenerator for Mandelbrot {
                 let (a, b) = self.view_window.map_pixel(px, py, w, h);
                 let c: Complex<f64> = Complex::new(a, b);
 
-                // Mandelbrot iteration: z = z^2 + c, starting z=0, where c=x+i*y=(x,y)
+                // Mandel_n iteration: z = z^3 + c, starting z=0, where c=x+iy
                 let mut iter = 0u32;
-                let mut z = Complex::new(0.0f64, 0.0f64);
+                let mut z: Complex<f64> = Complex::new(0.0f64, 0.0f64);
 
                 while iter < self.max_iter {
-                    // z^2 = (zr + i * zi)^2 = (zr^2 - zi^2) + i(2*zr*zi)
                     if z.norm_sqr() > 4.0 {
-                        // norm_sqr() is used over norm() since it avoids an extra square root operation
                         break;
                     }
 
-                    z = z * z + c;
+                    z = z.powf(self.n) + c;
 
                     iter += 1;
                 }
@@ -104,7 +108,7 @@ impl RasterGenerator for Mandelbrot {
             }
         }
 
-        progress_bar.finish_with_message("Finished building Mandelbrot raster");
+        progress_bar.finish_with_message("Finished building Multibrot raster");
         raster
     }
 }
