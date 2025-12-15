@@ -3,6 +3,8 @@
 ///
 /// # Examples
 /// ```
+/// use multibrot_ppm_rs::raster::ViewWindow;
+/// 
 /// let vw = ViewWindow::new(-1.0, 1.0, -1.0, 1.0);
 /// let vw1 = ViewWindow::full().zoom(4.0).pan(-0.5, 0.0);
 /// let vw2 = ViewWindow::zoomed();

@@ -4,7 +4,7 @@
 //!
 //! # Example
 //! ```rust
-//! use ppm_rs::raster::{Multibrot, ViewWindow};
+//! use multibrot_ppm_rs::raster::{Multibrot, ViewWindow};
 //!
 //! let mb = Multibrot::new(2.0, 100, ViewWindow::default()).unwrap();
 //! let raster = mb.generate(800, 600);
