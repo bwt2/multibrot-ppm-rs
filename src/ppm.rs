@@ -8,14 +8,14 @@ pub struct PPMImageBuffer {
 
 impl PPMImageBuffer {
     pub fn new(width: u16, height: u16, raster: Vec<u8>) -> Result<Self, Box<dyn Error>> {
-        if width <= 0 || height <= 0 {
+        if width == 0 || height == 0 {
             return Err("width and height must be > 0".into());
         }
 
         let expected = (width as usize)
             .checked_mul(height as usize)
             .and_then(|px| px.checked_mul(3))
-            .ok_or_else(|| "image dimensions too large")?;
+            .ok_or("image dimensions too large")?;
 
         if raster.len() != expected {
             return Err("raster length must be width * height * 3".into());

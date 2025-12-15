@@ -18,7 +18,7 @@ struct Config {
     #[arg(long, short = 'o', default_value_t = String::from("output.ppm"))]
     output_path: String,
 
-    /// Output image zoom
+    /// Render a zoomed-in view centered on the origin
     #[arg(long, short = 'z', default_value_t = false)]
     zoomed: bool,
 
